@@ -62,7 +62,7 @@ tgrid = (nInit:parPlant.T:nFinal)/60; %[min] one measurements per second
 %states to measurement mapping function
 parPlant.nMeas = 6;
 parPlant.H = zeros(6,24);
-parPlant.H(1,1) = 1e-2*60*1e3/parPlant.rho_o(1); %wro-oil rate from reservoir, well 1 [1e2 kg/s] --> [1e2 L/min]
+parPlant.H(1,1) = 1e-2*60*1e3/parPlant.rho_o(1); %wro-oil rate from reservoir, well 1 [1e-2 kg/s] --> [L/min]
 parPlant.H(2,2) = 1e-2*60*1e3/parPlant.rho_o(2); %wro-oil rate from reservoir, well 2
 parPlant.H(3,3) = 1e-2*60*1e3/parPlant.rho_o(3); %wro-oil rate from reservoir, well 3
 parPlant.H(4,7) = 1; %prh - riser head pressure well 1
