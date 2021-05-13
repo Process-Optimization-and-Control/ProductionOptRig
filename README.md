@@ -11,4 +11,6 @@ a) InitializationLabViewMain.m | b) LabViewMain.m
 
 are the same files, with the same tuning parameters that are used in the actual experimental rig. Therefore, the implementation of the three methods discussed in the paper (SSRTO, DRTO, and ROPA) can be studied by running these files. For obtaining the simulation results, simply run the file Main.m included in the folder with the same name as the method of interest.
 
-N.B.: All the data presented in the paper is experimental, no simulational results were used in the paper analysis.
+N.B.: 
+1. All the data presented in the paper is experimental, no simulational results were used in the paper analysis.
+2. For running the codes, you need to download CasADi (https://web.casadi.org/)
