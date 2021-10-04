@@ -16,7 +16,7 @@
 
 %       For "Plant":
 %           1. ErosionRigDynModel.m
-
+                                
 %       Bounds, Parameters and Initial conditon:
 %           1. InitialConditionGasLift.m
 %           2. OptimizationBoundsGasLiftRiser2.m
@@ -124,6 +124,8 @@ yOptArray = []; % model prediction @ new optimum
 uOptArray = []; % computed inputs (u_k^\star)
 uImpArray = []; % filtered inputs to be implemented (u_{k+1})
 
+compuTimeArray = []; % computational time
+
 for kk = 1:nFinal
     
     % printing the loop evolution in minutes
@@ -140,7 +142,7 @@ for kk = 1:nFinal
     xPlantArray = [xPlantArray, dxk];
     zPlantArray = [zPlantArray, zk];
     measPlantArray = [measPlantArray, parPlant.H*zk + noise.output*randn(6,1)]; %adding artificial noise to the measurements
-    ofPlantArray = [ofPlantArray, 20*(measPlantArray(1,end)) + 10*(measPlantArray(2,end)) + 30*(measPlantArray(3,end));];
+    ofPlantArray = [ofPlantArray, 20*(measPlantArray(1,end)) + 10*(measPlantArray(2,end)) + 30*(measPlantArray(3,end))];
     
     % we execute the production optimization:
     % a. after the initial [BufferLength]-second buffer
@@ -172,16 +174,20 @@ for kk = 1:nFinal
                     uk(5); % CV102 opening [-]
                     uk(6); % CV103 opening [-]
                     1;%dummy values --> in the actual rig, they will the pump rotation. Not used here
-                    uk(1);  % FI-104 [sL/min]
-                    uk(2);  % FI-105 [sL/min]
-                    uk(3)]; % FI-106 [sL/min]
+                    uSPPlantArray(1,end);  % FI-104sp [sL/min]
+                    uSPPlantArray(2,end);  % FI-105sp [sL/min]
+                    uSPPlantArray(3,end)]; % FI-106sp [sL/min]
 
         % values of the inputs (gas lift) of the last optimization run (dim = nQg[3] X 1)
         O_vector = uSPPlantArray(:,kk - nExec);
         
+        tic;
+        
         % Run Labview/Matlab interface file
         LabViewMain
 
+        compuTimeArray = [compuTimeArray, toc];
+        
         flagArray = [flagArray, [SS;Estimation;Optimization]]; 
         ofArray = [ofArray, Result]; 
         thetaHatArray = [thetaHatArray, Parameter_Estimation']; 
@@ -231,7 +237,7 @@ for kk = 1:nFinal
      thetaPlantArray = [thetaPlantArray, thetak];
 end
 
-% save(name,'flagArray','ofArray','thetaHatArray','xEstArray','xOptArray','uOptArray','uImpArray'); 
+save(name,'flagArray','ofArray','thetaHatArray','yEstArray','yOptArray','uOptArray','uImpArray','compuTimeArray');
 
 %%%%%%%%%%%%
 % Plotting %
@@ -258,7 +264,7 @@ for well = 1:3
         else
             ylim([2.5 4.5])
         end
-        
+
         xticks(0:1:(1/60)*(nFinal - 1))
         xlim([0 (1/60)*(nFinal - 1)])
 

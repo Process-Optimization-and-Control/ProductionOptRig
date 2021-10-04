@@ -111,7 +111,8 @@ if flagSS == 1 % we are at steady state at the current instant
 
     % running casadi
     [thetaHat,xEstHat,zEstHat,yEstHat,~,flagEst] = ErosionRigSSEstimation(xEstHat,zEstHat,thetaHat,uEst,yEst,par);
-
+    
+    
     if flagEst == 1
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Optimizing SS model parameters %
@@ -177,9 +178,9 @@ if flagSS == 1 % we are at steady state at the current instant
 else
     %%%%%%%%%
     %(dummy)%
-    %%%%%%%%%
-    % compute new values for the gas flow rate setpoints
+    %%%%%%%%%  
     O_vector = vertcat(fic104sp,fic105sp,fic106sp)';
+
     
     SS = 0;
     Estimation = 0;

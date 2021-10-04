@@ -123,6 +123,8 @@ yOptArray = []; % model prediction @ new optimum
 uOptArray = []; % computed inputs (u_k^\star)
 uImpArray = []; % filtered inputs to be implemented (u_{k+1})
 
+compuTimeArray = []; % computational time
+
 for kk = 1:nFinal
     
     % printing the loop evolution in minutes
@@ -171,15 +173,19 @@ for kk = 1:nFinal
                     uk(5); % CV102 opening [-]
                     uk(6); % CV103 opening [-]
                     1;%dummy values --> in the actual rig, they will the pump rotation. Not used here
-                    uk(1);  % FI-104 [sL/min]
-                    uk(2);  % FI-105 [sL/min]
-                    uk(3)]; % FI-106 [sL/min]
+                    uSPPlantArray(1,end);  % FI-104sp [sL/min]
+                    uSPPlantArray(2,end);  % FI-105sp [sL/min]
+                    uSPPlantArray(3,end)]; % FI-106sp [sL/min]
 
         % values of the inputs (gas lift) of the last optimization run (dim = nQg[3] X 1)
         O_vector = uSPPlantArray(:,kk - nExec);
         
+        tic
+        
         % Run Labview/Matlab interface file
         LabViewMain
+        
+        compuTimeArray = [compuTimeArray, toc];
 
         flagArray = [flagArray, [SS;Estimation;Optimization]]; 
         ofArray = [ofArray, Result]; 
@@ -230,7 +236,7 @@ for kk = 1:nFinal
      thetaPlantArray = [thetaPlantArray, thetak];
 end
 
-% save(name,'flagArray','ofArray','thetaHatArray','xEstArray','xOptArray','uOptArray','uImpArray'); 
+save(name,'flagArray','ofArray','thetaHatArray','yEstArray','yOptArray','uOptArray','uImpArray','compuTimeArray');
 
 %%%%%%%%%%%%
 % Plotting %
